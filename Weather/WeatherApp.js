@@ -45,21 +45,28 @@ class Stats extends React.Component {
 }
 
 function getIcon(type) {
-  if(type == 'Heavy Rain' || type == 'Light Rain') {
+  if(type == 'Heavy Rain' || type == 'Light Rain' || type == 'Sleet' || type == 'Hail' || type == 'Showers') {
     return(
       'rainy'
     )
   }
-  if(type == 'Heavy Cloud' || type == 'Light Cloud') {
+  if(type == 'Thunderstorm') {
+    return('thunderstorm')
+  }
+  if(type == 'Heavy Cloud') {
+    return ('cloudy')
+  }
+  if(type == 'Light Cloud') {
     return(
       'partly-sunny'
     )
   }
-  if(type == 'Sunny') {
+  if(type == 'Clear') {
     return (
       'sunny'
     )
   }
+
 }
 
 function getWeeklyWeather(data, weekDays, arr) {
