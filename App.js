@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   TextInput,
-  Keyboard
+  Keyboard,
+  ScrollView,
+  Dimensions,
+  StatusBar
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign'
 import Weather from './Weather/WeatherApp'
@@ -29,11 +32,18 @@ const App = () => {
 
   let fullString = defaultCity;
 
+  const screenHeight = Dimensions.get('window').height;
+  const statusBar = StatusBar.currentHeight;
+
+  const displayHeight = screenHeight - statusBar;
+
+
   function write(string) {
     fullString = string;
   }
 
   function changeLocation(id, title) {
+
     fetch("https://www.metaweather.com/api/location/" + id).then((res) => res.json())
     .then((json) => {
       setWeatherData(json)
@@ -56,23 +66,29 @@ const App = () => {
   }
 
   if(Object.keys(weatherData).length === 0) {
+
     changeLocation(defaultId, defaultCity)
   }
 
+  const cityInput = useRef()
+  
+
   return (
-    <View style={{flex: 1}}>
-      <View style = {styles.header}>
-        <View style = {styles.searchButton}>
-          <Button type='clear' icon={<Icon name='search1' size={30} color='#fff' onPress={() => searchCity(fullString)}/>} title='' loading={loading} disabled={loading}/>
-        </View>
-        <View style = {styles.cityName}>
-          <TextInput style = {{color: 'white', fontSize: 25}} placeholderTextColor='#fff' placeholder='Search city' onChangeText={text => write(text)}>{currentCity}</TextInput>
+      <ScrollView style={{flex: 1, height: displayHeight}}>
+        <View style={{height: displayHeight}}>
+          <View style = {styles.header}>
+            <View style = {styles.cityName}>
+              <TextInput style = {{color: 'white', fontSize: 25}} placeholderTextColor='#fff' onSubmitEditing={() => searchCity(fullString)} ref={cityInput} placeholder='Search city' onChangeText={text => write(text)}>{currentCity}</TextInput>
+            </View>
+            <View style = {styles.searchButton}>
+              <Button type='clear' icon={<Icon name='search1' size={30} color='#fff' onPress={() => cityInput.current.focus()}/>} title='' loading={loading} disabled={loading}/>
+            </View>
           </View>
-      </View>
-      <View style={{flex: 11}}>
-        {locationStatus ? <Locations data={cities} locationChanger={changeLocation}/> : <Weather weather={weatherData}/>}
-      </View>
-    </View>
+          <View style={{flex: 11}}>
+            {locationStatus ? <Locations data={cities} locationChanger={changeLocation}/> : <Weather weather={weatherData}/>}
+          </View>
+        </View>
+      </ScrollView>
   )
 };
 
@@ -81,19 +97,19 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     flexDirection: 'row',
-    backgroundColor: '#001f3f'
+    backgroundColor: '#001f3f',
   },
   searchButton: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
   cityName: {
     flex: 4,
     height: 'auto',
     justifyContent: 'center',
     alignItems: 'flex-start',
-    marginRight: 10,
+    marginLeft: 15,
   },
 });
 

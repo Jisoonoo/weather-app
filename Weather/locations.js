@@ -12,17 +12,16 @@ const locations = (props) => {
 
     return(
         <View>
-            <FlatList
-                data={props.data}
-                renderItem= {({item, index})=> (
+            {props.data.map((e, index) => {
+                return (
                     <Button 
                         key={index}
-                        title={item.title}
+                        title={e.title}
                         type='clear'
-                        onPress={() => props.locationChanger(item.woeid, item.title)}
+                        onPress={() => props.locationChanger(e.woeid, e.title)}
                     />
-                )}
-            />
+                )
+            })}
         </View>
     )
 }

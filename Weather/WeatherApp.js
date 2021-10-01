@@ -95,6 +95,8 @@ const Weather = (props) => {
 
 let dayArray = [];
 
+// console.log(props);
+
 const weatherData = props.weather.consolidated_weather[0]
 
 const customDate = props.weather.consolidated_weather;
